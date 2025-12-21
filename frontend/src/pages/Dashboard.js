@@ -198,6 +198,13 @@ const Dashboard = () => {
                         </div>
                     )}
 
+                    {/* Trademark Risk Matrix Section */}
+                    {brand.trademark_matrix && (
+                        <div className="mt-8">
+                            <TrademarkRiskTable matrix={brand.trademark_matrix} />
+                        </div>
+                    )}
+
 
                     {/* Detailed Framework Analysis - Full Cards instead of Accordion */}
                     <div className="mt-12 space-y-6">
