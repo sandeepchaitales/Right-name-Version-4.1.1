@@ -106,3 +106,98 @@ export const CompetitionAnalysis = ({ data }) => {
         </Card>
     );
 };
+
+export const TrademarkRiskTable = ({ matrix }) => {
+    if (!matrix) return null;
+
+    const rows = [
+        { label: "Genericness / Descriptiveness", ...matrix.genericness },
+        { label: "Existing Conflicts", ...matrix.existing_conflicts },
+        { label: "Phonetic Similarity", ...matrix.phonetic_similarity },
+        { label: "Relevant Trademark Classes", ...matrix.relevant_classes },
+        { label: "Rebranding Probability (3-5y)", ...matrix.rebranding_probability },
+    ];
+
+    const getZoneBadge = (zone) => {
+        if (zone === "Green") return <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 border-emerald-200">Green</Badge>;
+        if (zone === "Yellow") return <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 border-amber-200">Yellow</Badge>;
+        if (zone === "Red") return <Badge className="bg-red-100 text-red-800 hover:bg-red-100 border-red-200">Red</Badge>;
+        return zone;
+    };
+
+    return (
+        <Card className="border-slate-200 shadow-sm">
+            <CardHeader className="bg-slate-50 border-b border-slate-100 pb-4">
+                 <CardTitle className="text-lg font-serif text-slate-800">Trademark Risk Matrix</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+                <Table>
+                    <TableHeader>
+                        <TableRow className="bg-slate-50/50">
+                            <TableHead className="w-[200px] font-bold text-slate-900">Risk Factor</TableHead>
+                            <TableHead className="text-center font-bold text-slate-900 w-[100px]">Likelihood (1-10)</TableHead>
+                            <TableHead className="text-center font-bold text-slate-900 w-[100px]">Severity (1-10)</TableHead>
+                            <TableHead className="text-center font-bold text-slate-900 w-[100px]">Zone</TableHead>
+                            <TableHead className="font-bold text-slate-900">Commentary & Mitigation</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {rows.map((row, idx) => (
+                            <TableRow key={idx}>
+                                <TableCell className="font-medium text-slate-700">{row.label}</TableCell>
+                                <TableCell className="text-center">{row.likelihood}</TableCell>
+                                <TableCell className="text-center">{row.severity}</TableCell>
+                                <TableCell className="text-center">{getZoneBadge(row.zone)}</TableCell>
+                                <TableCell className="text-sm text-slate-600 leading-relaxed">{row.commentary}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <div className="p-6 bg-slate-50 border-t border-slate-200">
+                    <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Overall Legal Risk Assessment</h4>
+                    <p className="text-sm text-slate-800 leading-relaxed">{matrix.overall_assessment}</p>
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+export const DomainAvailabilityCard = ({ analysis }) => {
+    if (!analysis) return null;
+
+    return (
+        <Card className="border-slate-200 shadow-sm h-full">
+            <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
+                    Domain Availability
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <div>
+                    <div className="text-lg font-serif font-bold text-slate-900 mb-1">
+                        {analysis.exact_match_status}
+                    </div>
+                    <p className="text-xs text-slate-500 italic">Analysis based on common keyword patterns</p>
+                </div>
+                
+                <div>
+                    <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Recommended Alternatives</h4>
+                    <ul className="space-y-2">
+                        {analysis.alternatives.map((alt, i) => (
+                            <li key={i} className="flex justify-between items-center text-sm border-b border-slate-50 pb-1 last:border-0">
+                                <span className="font-mono text-slate-700">{alt.domain}</span>
+                                <span className="text-xs text-slate-400">{alt.example}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div className="bg-blue-50 p-3 rounded-md border border-blue-100">
+                    <p className="text-xs text-blue-800 leading-relaxed">
+                        <span className="font-bold">Strategy:</span> {analysis.strategy_note}
+                    </p>
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
