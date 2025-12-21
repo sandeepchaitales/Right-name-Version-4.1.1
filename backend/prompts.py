@@ -54,12 +54,12 @@ Output JSON Structure:
       "summary": "Short verdict summary.",
       "positioning_fit": "Analysis of fit with Mass/Premium/Ultra.",
       "dimensions": [
-        {"name": "Distinctiveness", "score": 9.0, "reasoning": "..."},
-        {"name": "Cultural Resonance", "score": 8.5, "reasoning": "..."},
-        {"name": "Premiumisation Trust", "score": 8.0, "reasoning": "..."},
-        {"name": "Scalability", "score": 9.0, "reasoning": "..."},
-        {"name": "Trademark Risk", "score": 7.0, "reasoning": "..."},
-        {"name": "Consumer Perception", "score": 8.0, "reasoning": "..."}
+        {"name": "Brand Distinctiveness & Memorability", "score": 9.0, "reasoning": "Detailed analysis of distinctiveness..."},
+        {"name": "Cultural & Linguistic Resonance", "score": 8.5, "reasoning": "Detailed analysis of cultural fit..."},
+        {"name": "Premiumisation & Trust Curve", "score": 8.0, "reasoning": "Detailed analysis of premium perception..."},
+        {"name": "Scalability & Brand Architecture", "score": 9.0, "reasoning": "Detailed analysis of scalability..."},
+        {"name": "Trademark & Legal Sensitivity", "score": 7.0, "reasoning": "Detailed analysis of probabilistic trademark risk..."},
+        {"name": "Consumer Perception Mapping", "score": 8.0, "reasoning": "Detailed analysis of consumer perception..."}
       ],
       "trademark_risk": {
         "risk_level": "Low/Medium/High/Critical",
