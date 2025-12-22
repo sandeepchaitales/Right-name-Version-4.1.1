@@ -52,80 +52,107 @@
   /* 1. Page Setup */
   @page {
     size: A4;
-    margin: 10mm; /* Reduced margins for fuller look */
+    margin: 15mm; /* Standard 15mm margins for balance */
   }
 
-  /* 2. Force Background Colors & Graphics */
-  body {
+  /* 2. Global Resets */
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
+    background-color: white !important;
+    font-size: 10pt;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    background-color: white !important;
-    font-size: 10pt; /* Slightly smaller for density */
   }
 
   /* 3. Hide UI Elements */
-  nav, button, .print\:hidden, .sticky-header {
+  nav, button, .print\:hidden, .sticky-header, .no-print {
     display: none !important;
   }
 
-  /* 4. Typography & Branding */
-  h1, h2, h3 {
-    color: #0f172a !important;
-    font-family: 'Outfit', sans-serif !important; /* Keep modern font for brand consistency */
-  }
-  
-  /* 5. Card Styling - KEEP THE LOOK */
-  .playful-card {
-    border: 1px solid #e2e8f0 !important;
-    box-shadow: none !important;
-    break-inside: avoid !important;
-    background-color: #fff !important; /* Ensure white bg */
-    border-radius: 12px !important;
-    margin-bottom: 20px !important;
-  }
-
-  /* Preserve header backgrounds in cards */
-  .bg-slate-900, .bg-indigo-900 {
-    color: white !important;
-    background-color: #0f172a !important; /* Force dark headers */
-  }
-  
-  /* Preserve Badge Colors */
-  .bg-emerald-100 { background-color: #d1fae5 !important; color: #065f46 !important; }
-  .bg-rose-100 { background-color: #ffe4e6 !important; color: #881337 !important; }
-  .bg-amber-100 { background-color: #fef3c7 !important; color: #92400e !important; }
-  .bg-violet-100 { background-color: #ede9fe !important; color: #5b21b6 !important; }
-
-  /* 6. Layout Adjustments */
+  /* 4. Layout Flow & Breaks */
   .grid {
-    display: grid !important; /* Keep grid layout if possible */
+    display: block !important; /* Stack grids generally */
   }
   
-  /* Force specific layouts for print */
+  /* Exception for balanced 2-col grids that fit side-by-side */
   .print\:grid-cols-2 {
+    display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 20px !important;
   }
-  
-  .print\:block {
-    display: block !important;
+
+  /* Prevent awkward breaks inside components */
+  .playful-card, .card, table, tr, figure, .break-inside-avoid {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
-  /* 7. Chart Handling */
-  .recharts-wrapper {
-    margin: 0 auto !important;
-  }
-  
-  /* 8. Page Breaks */
-  .print\:break-before {
+  /* Force breaks before major sections */
+  .print\:break-before-page {
     page-break-before: always !important;
+    margin-top: 0 !important; /* Reset margin after break */
   }
-  .print\:break-after {
-    page-break-after: always !important;
+
+  /* 5. Typography Scaling */
+  h1 { font-size: 24pt !important; margin-bottom: 10pt !important; }
+  h2 { font-size: 18pt !important; margin-bottom: 8pt !important; page-break-after: avoid; }
+  h3 { font-size: 14pt !important; margin-bottom: 6pt !important; page-break-after: avoid; }
+  p, td, li { font-size: 9pt !important; line-height: 1.4 !important; }
+
+  /* 6. Visual Adjustments */
+  .playful-card {
+    border: 1px solid #cbd5e1 !important; /* Slate-300 */
+    box-shadow: none !important;
+    border-radius: 8px !important;
+    margin-bottom: 15px !important;
+    padding: 10px !important; /* Reduce internal padding for density */
   }
   
-  /* 9. Section Spacing */
+  /* Compact Headers inside cards */
+  .playful-card .card-header {
+    padding-bottom: 8px !important;
+    margin-bottom: 8px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+  }
+
+  /* 7. Spacing Reduction */
+  .space-y-12, .space-y-16 {
+    margin-top: 0 !important;
+    margin-bottom: 20px !important;
+  }
+  
   section {
-    margin-bottom: 30px !important;
+    margin-bottom: 25px !important;
+  }
+
+  /* 8. Table Specifics */
+  table {
+    width: 100% !important;
+    border-collapse: collapse;
+  }
+  th {
+    background-color: #f1f5f9 !important; /* Slate-100 */
+    color: #0f172a !important;
+    font-size: 8pt !important;
+    padding: 4px 8px !important;
+  }
+  td {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 6px 8px !important;
+  }
+  
+  /* 9. Badge & Colors */
+  .badge {
+    border: 1px solid #e2e8f0 !important;
+    color: #000 !important; /* Ensure readability */
+  }
+  
+  /* Scale content to fit width */
+  main {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 }
