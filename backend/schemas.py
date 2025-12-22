@@ -11,7 +11,8 @@ class DimensionScore(BaseModel):
 class TrademarkRiskRow(BaseModel):
     likelihood: int
     severity: int
-    zone: Literal["Green", "Yellow", "Red"]
+    # Relaxed to str to allow "Orange" or other LLM inventions without crashing
+    zone: str 
     commentary: str
 
 class TrademarkRiskMatrix(BaseModel):
@@ -28,7 +29,6 @@ class DomainAnalysis(BaseModel):
     strategy_note: str
 
 class VisibilityAnalysis(BaseModel):
-    # Relaxed to allow strings or dicts to prevent validation errors if LLM outputs objects
     google_presence: List[Any] 
     app_store_presence: List[Any]
     warning_triggered: bool
@@ -65,7 +65,6 @@ class FinalAssessment(BaseModel):
 class BrandScore(BaseModel):
     brand_name: str
     namescore: float
-    # Relaxed verdict to str to prevent crash on "GO with Caution"
     verdict: str 
     summary: str
     strategic_classification: str
