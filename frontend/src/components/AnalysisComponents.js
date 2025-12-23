@@ -522,4 +522,186 @@ export const AlternativeNamesCard = ({ alternatives, verdict }) => {
     );
 };
 
+// Platform icon mapping
+const PlatformIcon = ({ platform, className }) => {
+    const iconMap = {
+        instagram: Instagram,
+        twitter: Twitter,
+        facebook: Facebook,
+        youtube: Youtube,
+        linkedin: Linkedin,
+    };
+    const Icon = iconMap[platform?.toLowerCase()] || Globe;
+    return <Icon className={className} />;
+};
+
+// Status icon helper
+const StatusIcon = ({ available }) => {
+    if (available === true) return <CheckCircle2 className="w-4 h-4 text-emerald-500" />;
+    if (available === false) return <XCircle className="w-4 h-4 text-rose-500" />;
+    return <HelpCircle className="w-4 h-4 text-slate-400" />;
+};
+
+// Multi-Domain Availability Card
+export const MultiDomainCard = ({ data }) => {
+    if (!data) return null;
+
+    const allDomains = [
+        ...(data.category_domains || []),
+        ...(data.country_domains || [])
+    ];
+
+    const availableCount = allDomains.filter(d => d.available === true).length;
+    const totalCount = allDomains.length;
+
+    return (
+        <Card className={`${CARD_STYLE} h-full`}>
+            <CardHeader className="pb-3 pt-5 bg-gradient-to-r from-blue-50 to-cyan-50">
+                <div className="flex items-center justify-between">
+                    <CardTitle className="text-xs font-bold uppercase tracking-widest text-blue-600 flex items-center gap-2">
+                        <Globe className="w-4 h-4" /> Multi-Domain Check
+                    </CardTitle>
+                    <Badge variant="secondary" className="bg-white text-blue-700 font-bold">
+                        {availableCount}/{totalCount} Available
+                    </Badge>
+                </div>
+            </CardHeader>
+            <CardContent className="pt-4 space-y-4">
+                {/* Category Domains */}
+                {data.category_domains && data.category_domains.length > 0 && (
+                    <div>
+                        <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Category TLDs</h4>
+                        <div className="space-y-1">
+                            {data.category_domains.map((d, i) => (
+                                <div key={i} className={`flex items-center justify-between p-2 rounded-lg border ${d.available ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`}>
+                                    <span className="text-sm font-bold text-slate-700">{d.domain}</span>
+                                    <div className="flex items-center gap-2">
+                                        <StatusIcon available={d.available} />
+                                        <Badge variant="outline" className={`text-[10px] ${d.available ? 'text-emerald-600 border-emerald-300' : 'text-rose-600 border-rose-300'}`}>
+                                            {d.status}
+                                        </Badge>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Country Domains */}
+                {data.country_domains && data.country_domains.length > 0 && (
+                    <div>
+                        <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Country TLDs</h4>
+                        <div className="space-y-1">
+                            {data.country_domains.map((d, i) => (
+                                <div key={i} className={`flex items-center justify-between p-2 rounded-lg border ${d.available ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`}>
+                                    <span className="text-sm font-bold text-slate-700">{d.domain}</span>
+                                    <div className="flex items-center gap-2">
+                                        <StatusIcon available={d.available} />
+                                        <Badge variant="outline" className={`text-[10px] ${d.available ? 'text-emerald-600 border-emerald-300' : 'text-rose-600 border-rose-300'}`}>
+                                            {d.status}
+                                        </Badge>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Recommendation */}
+                {data.recommended_domain && (
+                    <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                        <h4 className="text-xs font-bold text-blue-700 mb-1">Recommended Domain</h4>
+                        <p className="text-sm font-bold text-blue-900">{data.recommended_domain}</p>
+                    </div>
+                )}
+
+                {data.acquisition_strategy && (
+                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <p className="text-xs text-slate-600 leading-relaxed">{data.acquisition_strategy}</p>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+    );
+};
+
+// Social Handle Availability Card
+export const SocialAvailabilityCard = ({ data }) => {
+    if (!data) return null;
+
+    const platforms = data.platforms || [];
+    const availableCount = platforms.filter(p => p.available === true).length;
+    const totalCount = platforms.length;
+
+    return (
+        <Card className={`${CARD_STYLE} h-full`}>
+            <CardHeader className="pb-3 pt-5 bg-gradient-to-r from-pink-50 to-purple-50">
+                <div className="flex items-center justify-between">
+                    <CardTitle className="text-xs font-bold uppercase tracking-widest text-pink-600 flex items-center gap-2">
+                        <Instagram className="w-4 h-4" /> Social Handles
+                    </CardTitle>
+                    <Badge variant="secondary" className="bg-white text-pink-700 font-bold">
+                        {availableCount}/{totalCount} Available
+                    </Badge>
+                </div>
+                <p className="text-sm text-slate-500 mt-1">Handle: <span className="font-bold text-slate-700">@{data.handle}</span></p>
+            </CardHeader>
+            <CardContent className="pt-4 space-y-3">
+                {/* Platforms Grid */}
+                <div className="grid grid-cols-2 gap-2">
+                    {platforms.map((p, i) => (
+                        <div 
+                            key={i} 
+                            className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                                p.available === true 
+                                    ? 'bg-emerald-50 border-emerald-200 hover:border-emerald-300' 
+                                    : p.available === false 
+                                        ? 'bg-rose-50 border-rose-200 hover:border-rose-300'
+                                        : 'bg-slate-50 border-slate-200'
+                            }`}
+                        >
+                            <PlatformIcon platform={p.platform} className={`w-5 h-5 ${
+                                p.available === true ? 'text-emerald-600' : p.available === false ? 'text-rose-500' : 'text-slate-400'
+                            }`} />
+                            <div className="flex-1 min-w-0">
+                                <p className="text-xs font-bold text-slate-700 capitalize truncate">{p.platform}</p>
+                                <p className={`text-[10px] font-medium ${
+                                    p.available === true ? 'text-emerald-600' : p.available === false ? 'text-rose-500' : 'text-slate-400'
+                                }`}>
+                                    {p.status}
+                                </p>
+                            </div>
+                            <StatusIcon available={p.available} />
+                        </div>
+                    ))}
+                </div>
+
+                {/* Quick Summary */}
+                <div className="flex gap-2 pt-2">
+                    {data.available_platforms && data.available_platforms.length > 0 && (
+                        <div className="flex-1 p-2 bg-emerald-50 rounded-lg border border-emerald-100">
+                            <p className="text-[10px] font-bold text-emerald-600 uppercase">Available</p>
+                            <p className="text-xs text-emerald-800 font-medium">{data.available_platforms.join(', ')}</p>
+                        </div>
+                    )}
+                    {data.taken_platforms && data.taken_platforms.length > 0 && (
+                        <div className="flex-1 p-2 bg-rose-50 rounded-lg border border-rose-100">
+                            <p className="text-[10px] font-bold text-rose-600 uppercase">Taken</p>
+                            <p className="text-xs text-rose-800 font-medium">{data.taken_platforms.join(', ')}</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* Recommendation */}
+                {data.recommendation && (
+                    <div className="p-3 bg-purple-50 rounded-lg border border-purple-100 flex items-start gap-2">
+                        <Info className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
+                        <p className="text-xs text-purple-800 leading-relaxed">{data.recommendation}</p>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+    );
+};
+
 export { VisibilityAnalysisCard } from './VisibilityComponent';
