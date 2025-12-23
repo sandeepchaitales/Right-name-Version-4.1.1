@@ -1,16 +1,28 @@
 {
   "summary": {
-    "tests_run": 1,
-    "tests_passed": 0,
-    "success_rate": 0.0
+    "tests_run": 3,
+    "tests_passed": 3,
+    "success_rate": 100.0
   },
   "results": [
     {
       "test": "API Health Check",
-      "success": false,
-      "details": "HTTPSConnectionPool(host='brandscoreapp.preview.emergentagent.com', port=443): Read timed out. (read timeout=10)",
-      "timestamp": "2025-12-23T19:25:03.427054"
+      "success": true,
+      "details": "Status: 200, Response: {\"message\":\"RightName API is running\"}",
+      "timestamp": "2025-12-23T19:26:28.426951"
+    },
+    {
+      "test": "Evaluate Endpoint - Structure",
+      "success": true,
+      "details": "All required fields present, Astra NameScore: 78.0",
+      "timestamp": "2025-12-23T19:27:31.604714"
+    },
+    {
+      "test": "Invalid Payload Handling",
+      "success": true,
+      "details": "Status: 422 (Expected 4xx for invalid payload)",
+      "timestamp": "2025-12-23T19:27:31.672059"
     }
   ],
-  "timestamp": "2025-12-23T19:25:03.427204"
+  "timestamp": "2025-12-23T19:27:31.672342"
 }
