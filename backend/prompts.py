@@ -235,13 +235,38 @@ For each dimension, provide a multi-paragraph deep dive (150-250 words per dimen
    - **Emotional Response**: Plot on "Modern vs. Traditional" and "Accessible vs. Exclusive".
    - **Gap Analysis**: Difference between "Desired Positioning" and "Actual Perception".
 
-### 5. COMPETITIVE LANDSCAPE & PRICING (Strict 2x2 Matrix Logic)
-   - **Framework**: Analyze competitors based on **Modernity (Y-Axis)** vs. **Price (X-Axis)**.
-   - **Competitors**: Use real, relevant competitors (e.g., FabIndia, Satya Paul, Ritu Kumar if India is context).
-   - **Data Points**:
-     - **Price Axis (X)**: Low / Mid / High
-     - **Modernity Axis (Y)**: Traditional / Fusion / Modern-Avant-Garde
-     - **Quadrant**: Define the quadrant (e.g., "Heritage Luxury", "Mass Modern").
+### 5. COMPETITIVE LANDSCAPE & POSITIONING MATRIX (MANDATORY - Must Have Real Data)
+
+**CRITICAL: The positioning matrix MUST contain REAL competitors with NUMERIC coordinates.**
+
+**Step 1: Define Category-Specific Axes**
+Based on the user's product category, define relevant axes:
+
+| Category | X-Axis | Y-Axis |
+|----------|--------|--------|
+| Fashion/Apparel | Price (Budget→Luxury) | Style (Classic→Avant-Garde) |
+| Technology/SaaS | Price (Free→Enterprise) | Complexity (Simple→Advanced) |
+| Food & Beverage | Price (Value→Premium) | Health (Indulgent→Healthy) |
+| Beauty/Cosmetics | Price (Mass→Prestige) | Ingredients (Synthetic→Natural) |
+| Finance/Banking | Price (Low-Fee→Premium) | Service (Digital-Only→Full-Service) |
+| Healthcare | Price (Affordable→Premium) | Approach (Traditional→Innovative) |
+| E-commerce/Retail | Price (Discount→Premium) | Experience (Basic→Curated) |
+| Travel/Hospitality | Price (Budget→Luxury) | Experience (Standard→Boutique) |
+| Education/EdTech | Price (Free→Premium) | Format (Self-Paced→Live/Mentored) |
+| Default | Price (Low→High) | Quality (Basic→Premium) |
+
+**Step 2: Find 4-6 REAL Competitors**
+- Use REAL brand names that exist in the user's category and target market
+- For India: Use Indian brands (e.g., Nykaa, Mamaearth, Boat, Zepto, Swiggy)
+- For USA: Use US brands (e.g., Glossier, Warby Parker, Casper)
+- NO placeholder names - only real, verifiable brands
+
+**Step 3: Assign Numeric Coordinates (0-100 scale)**
+Each competitor MUST have:
+- `x_coordinate`: Numeric value 0-100 (where 0=left side of axis, 100=right side)
+- `y_coordinate`: Numeric value 0-100 (where 0=bottom of axis, 100=top)
+- `name`: Real brand name
+- `quadrant`: Which quadrant they occupy
 
 ### 6. JSON OUTPUT STRUCTURE
 Return ONLY valid JSON.
