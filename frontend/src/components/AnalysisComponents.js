@@ -231,7 +231,18 @@ export const CompetitionAnalysis = ({ data, verdict }) => {
                     </div>
                     <div className="pt-4 border-t border-slate-100">
                         <h4 className="text-xs font-bold text-slate-400 uppercase mb-1">Recommended Pricing</h4>
-                        <div className="text-2xl font-bold text-slate-900">{data.suggested_pricing}</div>
+                        {(!isPricingApplicable || isNAPricing) ? (
+                            <div className="p-3 bg-slate-100 rounded-lg border border-slate-200">
+                                <p className="text-sm text-slate-500 font-medium italic">
+                                    N/A — Pricing analysis not applicable for rejected names.
+                                </p>
+                                <p className="text-xs text-slate-400 mt-1">
+                                    See Plan B for alternative name suggestions.
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="text-2xl font-bold text-slate-900">{data.suggested_pricing}</div>
+                        )}
                     </div>
                 </CardContent>
             </Card>
