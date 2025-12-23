@@ -359,36 +359,89 @@ export const TrademarkRiskTable = ({ matrix, trademarkClasses }) => {
 export const DomainAvailabilityCard = ({ analysis }) => {
     if (!analysis) return null;
 
-    const isTaken = analysis.exact_match_status.toLowerCase().includes("taken");
+    const isTaken = analysis.exact_match_status?.toLowerCase().includes("taken");
+    const isParked = analysis.exact_match_status?.toLowerCase().includes("parked");
+    const riskLevel = analysis.risk_level?.toUpperCase() || "LOW";
+    const hasActiveBusiness = analysis.has_active_business?.toUpperCase() === "YES";
+    const hasTrademark = analysis.has_trademark?.toUpperCase() === "YES";
+
+    // Determine risk color
+    const getRiskColor = () => {
+        if (riskLevel === "HIGH") return "rose";
+        if (riskLevel === "MEDIUM") return "amber";
+        return "emerald";
+    };
+    const riskColor = getRiskColor();
 
     return (
-        <Card className={`${CARD_STYLE} h-full border-l-4 ${isTaken ? 'border-l-amber-400' : 'border-l-emerald-400'}`}>
+        <Card className={`${CARD_STYLE} h-full border-l-4 border-l-${riskColor}-400`}>
             <CardHeader className="pb-3 pt-5">
-                <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                    Domain Status
+                <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center justify-between">
+                    <span>Domain Status</span>
+                    <Badge className={`bg-${riskColor}-100 text-${riskColor}-700 text-[10px]`}>
+                        {riskLevel} RISK
+                    </Badge>
                 </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-5">
+            <CardContent className="space-y-4">
+                {/* Domain Status */}
                 <div>
-                    <div className={`text-xl font-bold ${isTaken ? 'text-amber-600' : 'text-emerald-600'} mb-1 break-words`}>
-                        {analysis.exact_match_status.split(':')[0]}
+                    <div className={`text-lg font-bold ${isTaken ? (isParked ? 'text-amber-500' : 'text-rose-600') : 'text-emerald-600'} mb-1 break-words`}>
+                        {analysis.exact_match_status?.split(':')[0] || analysis.exact_match_status}
                     </div>
-                    <Badge variant="secondary" className={`mt-1 ${isTaken ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}`}>
-                        {isTaken ? 'Registered' : 'Available'}
+                    <Badge variant="secondary" className={`mt-1 ${isTaken ? (isParked ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700') : 'bg-emerald-100 text-emerald-700'}`}>
+                        {isParked ? 'Parked (No Active Business)' : isTaken ? 'Registered' : 'Available'}
                     </Badge>
                 </div>
+
+                {/* 3-Check Verification */}
+                {isTaken && (
+                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2">
+                        <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Conflict Verification</h4>
+                        <div className="grid grid-cols-1 gap-2">
+                            <div className="flex items-center gap-2">
+                                {hasTrademark ? <XCircle className="w-4 h-4 text-rose-500" /> : <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                                <span className="text-xs text-slate-600">
+                                    Active Trademark: <span className={`font-bold ${hasTrademark ? 'text-rose-600' : 'text-emerald-600'}`}>{analysis.has_trademark || 'NO'}</span>
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                {hasActiveBusiness ? <XCircle className="w-4 h-4 text-rose-500" /> : <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                                <span className="text-xs text-slate-600">
+                                    Operating Business: <span className={`font-bold ${hasActiveBusiness ? 'text-rose-600' : 'text-emerald-600'}`}>{analysis.has_active_business || 'NO'}</span>
+                                </span>
+                            </div>
+                        </div>
+                        {!hasTrademark && !hasActiveBusiness && (
+                            <p className="text-[10px] text-emerald-600 font-medium mt-2 p-2 bg-emerald-50 rounded">
+                                ✓ No trademark or active business found. Domain alone is NOT a rejection factor.
+                            </p>
+                        )}
+                    </div>
+                )}
                 
+                {/* Alternatives */}
                 <div>
-                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Alternatives</h4>
+                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Recommended Alternatives</h4>
                     <div className="space-y-2">
-                        {analysis.alternatives.map((alt, i) => (
+                        {analysis.alternatives?.map((alt, i) => (
                             <div key={i} className="flex justify-between items-center text-sm bg-slate-50 p-2 rounded-lg border border-slate-100 hover:border-violet-200 transition-colors">
                                 <span className="font-bold text-slate-700 text-xs">{alt.domain}</span>
-                                <span className="text-[10px] text-slate-400">{alt.example}</span>
+                                <span className="text-[10px] text-slate-400">{alt.rationale || alt.example}</span>
                             </div>
                         ))}
                     </div>
                 </div>
+
+                {/* Score Impact */}
+                {analysis.score_impact && (
+                    <div className="p-2 bg-blue-50 rounded-lg border border-blue-100">
+                        <p className="text-[10px] text-blue-700 font-medium">
+                            <Info className="w-3 h-3 inline mr-1" />
+                            Score Impact: {analysis.score_impact}
+                        </p>
+                    </div>
+                )}
 
                 <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
                     <p className="text-xs text-slate-600 font-medium leading-relaxed">
