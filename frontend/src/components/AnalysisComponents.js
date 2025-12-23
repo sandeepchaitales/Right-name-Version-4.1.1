@@ -314,14 +314,35 @@ export const CompetitionAnalysis = ({ data, verdict }) => {
                     <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-500 flex items-center gap-2">
                         <TrendingUp className="w-4 h-4" /> Strategic Positioning Matrix
                     </CardTitle>
+                    {(data.x_axis_label || data.y_axis_label) && (
+                        <p className="text-xs text-slate-400 mt-1">
+                            X: {data.x_axis_label || 'Price'} | Y: {data.y_axis_label || 'Quality'}
+                        </p>
+                    )}
                 </CardHeader>
                 <CardContent className="p-6">
-                    <CompetitiveMatrixChart competitors={data.competitors} />
-                    <div className="mt-4 text-center">
-                        <p className="text-xs text-slate-400 italic">
-                            *Visual approximation based on market positioning
-                        </p>
-                    </div>
+                    {data.competitors && data.competitors.length > 0 ? (
+                        <>
+                            <CompetitiveMatrixChart 
+                                competitors={data.competitors} 
+                                xAxisLabel={data.x_axis_label}
+                                yAxisLabel={data.y_axis_label}
+                                userBrandPosition={data.user_brand_position}
+                            />
+                            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2">
+                                {data.competitors.slice(0, 4).map((comp, i) => (
+                                    <div key={i} className="p-2 bg-slate-50 rounded-lg text-center">
+                                        <p className="text-xs font-bold text-slate-700 truncate">{comp.name}</p>
+                                        <p className="text-[10px] text-slate-400">{comp.quadrant}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    ) : (
+                        <div className="h-[300px] flex items-center justify-center bg-slate-50 rounded-xl border border-slate-200">
+                            <p className="text-sm text-slate-400 italic">No competitor data available</p>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
         </div>
