@@ -25,11 +25,88 @@ const LandingPage = () => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     brand_names: '',
+    industry: '',
     category: '',
+    product_type: 'Digital',
+    usp: '',
+    brand_vibe: '',
     positioning: 'Premium',
     market_scope: 'Multi-Country',
     countries: ''
   });
+
+  // Industry options
+  const industries = [
+    "Technology & Software",
+    "E-commerce & Retail",
+    "Finance & Banking",
+    "Healthcare & Pharma",
+    "Food & Beverage",
+    "Fashion & Apparel",
+    "Beauty & Cosmetics",
+    "Travel & Hospitality",
+    "Real Estate & Property",
+    "Education & EdTech",
+    "Media & Entertainment",
+    "Automotive",
+    "Manufacturing",
+    "Agriculture",
+    "Energy & Utilities",
+    "Logistics & Supply Chain",
+    "Professional Services",
+    "Non-Profit & NGO",
+    "Sports & Fitness",
+    "Home & Living",
+    "Pet Care",
+    "Kids & Baby",
+    "Jewelry & Accessories",
+    "Art & Crafts",
+    "Gaming",
+    "Telecom",
+    "Insurance",
+    "Legal Services",
+    "HR & Recruitment",
+    "Marketing & Advertising",
+    "Other"
+  ];
+
+  // Product Type options
+  const productTypes = [
+    { value: "Physical", label: "Physical Product" },
+    { value: "Digital", label: "Digital Product/App" },
+    { value: "Service", label: "Service" },
+    { value: "Hybrid", label: "Hybrid (Product + Service)" }
+  ];
+
+  // USP options
+  const uspOptions = [
+    { value: "Price", label: "Price - Best value for money" },
+    { value: "Quality", label: "Quality - Superior craftsmanship" },
+    { value: "Speed", label: "Speed - Fastest delivery/service" },
+    { value: "Reliability", label: "Reliability - Always dependable" },
+    { value: "Design", label: "Design - Aesthetically superior" },
+    { value: "Personal Touch", label: "Personal Touch - Customized experience" },
+    { value: "Health", label: "Health - Better for wellbeing" },
+    { value: "Eco-Friendly", label: "Eco-Friendly - Sustainable choice" },
+    { value: "Pure", label: "Pure - Natural/Organic" },
+    { value: "No Hassle", label: "No Hassle - Convenience first" }
+  ];
+
+  // Brand Vibe options
+  const brandVibes = [
+    { value: "Serious", label: "Serious & Professional" },
+    { value: "Playful", label: "Playful & Fun" },
+    { value: "Modern", label: "Modern & Innovative" },
+    { value: "Classic", label: "Classic & Timeless" },
+    { value: "Luxurious", label: "Luxurious & Premium" },
+    { value: "Bold", label: "Bold & Edgy" },
+    { value: "Friendly", label: "Friendly & Approachable" },
+    { value: "Minimalist", label: "Minimalist & Clean" },
+    { value: "Adventurous", label: "Adventurous & Dynamic" },
+    { value: "Trustworthy", label: "Trustworthy & Reliable" },
+    { value: "Youthful", label: "Youthful & Energetic" },
+    { value: "Sophisticated", label: "Sophisticated & Elegant" }
+  ];
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
