@@ -206,14 +206,18 @@ Return ONLY valid JSON.
       ],
       
       "domain_analysis": {
-          "exact_match_status": "Status",
+          "exact_match_status": "TAKEN/AVAILABLE/PARKED",
+          "risk_level": "LOW/MEDIUM/HIGH - CRITICAL: .com taken alone = LOW risk (max 3/10). Only HIGH if active business + TM exists.",
+          "has_active_business": "YES/NO - Is there an operating business at this domain?",
+          "has_trademark": "YES/NO/UNKNOWN - Is there a registered TM for this name in target category?",
           "alternatives": [
-              {"domain": "...", "example": "..."},
-              {"domain": "...", "example": "..."},
-              {"domain": "...", "example": "..."},
-              {"domain": "...", "example": "..."}
+              {"domain": "brand.io", "rationale": "Tech-friendly alternative"},
+              {"domain": "brand.co.in", "rationale": "India country-code"},
+              {"domain": "brand.shop", "rationale": "Category-specific TLD"},
+              {"domain": "getbrand.com", "rationale": "Prefix variation"}
           ],
-          "strategy_note": "Strategic advice on acquisition."
+          "strategy_note": "RULE: If .com is taken but parked/inactive, recommend alternatives. Domain alone should NOT drive rejection.",
+          "score_impact": "-1 point max for taken .com. Prioritize category TLDs (.fashion, .tech, .shop) over .com"
       },
 
       "multi_domain_availability": {
@@ -225,8 +229,8 @@ Return ONLY valid JSON.
               {"domain": "brand.in", "status": "AVAILABLE/TAKEN", "available": true},
               {"domain": "brand.co.in", "status": "AVAILABLE/TAKEN", "available": false}
           ],
-          "recommended_domain": "The best available domain from the list",
-          "acquisition_strategy": "Strategy for acquiring domains"
+          "recommended_domain": "The best available domain from the list - prioritize category TLDs",
+          "acquisition_strategy": "Strategy for acquiring domains. Note: .com is not mandatory for modern brands."
       },
 
       "social_availability": {
