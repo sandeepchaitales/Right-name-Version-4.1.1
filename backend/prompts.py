@@ -121,10 +121,12 @@ Return ONLY valid JSON.
           ],
           "white_space_analysis": "A full paragraph analyzing the market gap using the Blue Ocean framework. Define the specific niche this name owns.",
           "strategic_advantage": "The specific 'Unfair Advantage' this name provides over the competitors listed above.",
-          "suggested_pricing": "Specific pricing strategy in LOCAL CURRENCY (e.g. 'Skimming strategy at 20% premium')"
+          "suggested_pricing": "CRITICAL RULE: If verdict is REJECT or NO-GO, set this to 'N/A - Pricing analysis not applicable for rejected brand names. Focus on alternative names in Plan B section.' Otherwise, provide specific pricing strategy in LOCAL CURRENCY (e.g. 'Skimming strategy at ₹2,500-3,500 range')."
       },
       
-      "positioning_fit": "Deep analysis of fit with the requested positioning. Discuss nuances.",
+      "PRICING_RULE": "Do NOT recommend pricing strategies for brand names with REJECT or NO-GO verdicts. It is illogical to suggest how to price a product with a name you are recommending they abandon.",
+      
+      "positioning_fit": "Deep analysis of fit with the requested positioning. Discuss nuances. If verdict is REJECT/NO-GO, note that positioning analysis is moot given the recommendation to abandon this name.",
       
       "dimensions": [
         {
