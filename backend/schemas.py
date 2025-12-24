@@ -87,14 +87,24 @@ class ConflictItem(BaseModel):
     risk_level: str = Field(default="LOW", description="HIGH only if SAME intent + SAME customers")
     reason: Optional[str] = None
 
+class PhoneticConflict(BaseModel):
+    input_name: Optional[str] = None
+    phonetic_variants: List[str] = Field(default=[])
+    ipa_pronunciation: Optional[str] = None
+    found_conflict: Optional[Dict[str, Any]] = None
+    conflict_type: Optional[str] = Field(default="NONE")
+    legal_risk: Optional[str] = None
+    verdict_impact: Optional[str] = None
+
 class VisibilityAnalysis(BaseModel):
     user_product_intent: Optional[str] = Field(default=None, description="What does the user's product DO?")
     user_customer_avatar: Optional[str] = Field(default=None, description="Who buys the user's product")
+    phonetic_conflicts: List[PhoneticConflict] = Field(default=[], description="Phonetically similar names in same category - CRITICAL")
     direct_competitors: List[ConflictItem] = Field(default=[], description="Same intent + same customers - HIGH risk")
     name_twins: List[ConflictItem] = Field(default=[], description="Keyword matches with different intent/customers - LOW risk, NOT rejection factors")
-    google_presence: List[Any] 
-    app_store_presence: List[Any]
-    warning_triggered: bool
+    google_presence: List[Any] = Field(default=[])
+    app_store_presence: List[Any] = Field(default=[])
+    warning_triggered: bool = Field(default=False)
     warning_reason: Optional[str] = None
     conflict_summary: Optional[str] = Field(default=None, description="Summary distinguishing real conflicts from false positives")
 
