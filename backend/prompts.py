@@ -256,10 +256,35 @@ Based on the user's product category, define relevant axes:
 | Default | Price (Low→High) | Quality (Basic→Premium) |
 
 **Step 2: Find 4-6 REAL Competitors**
-- Use REAL brand names that exist in the user's category and target market
-- For India: Use Indian brands (e.g., Nykaa, Mamaearth, Boat, Zepto, Swiggy)
-- For USA: Use US brands (e.g., Glossier, Warby Parker, Casper)
-- NO placeholder names - only real, verifiable brands
+**CRITICAL: Search by INDUSTRY CATEGORY, NOT by BRAND NAME!**
+
+**THIS IS A MARKET STRATEGY ANALYSIS, NOT A TRADEMARK SEARCH.**
+- DO NOT search for names similar to the user's brand name
+- DO search for "top [industry/category] brands in [target market]"
+- Use your knowledge of REAL market leaders in that category
+
+**SEARCH METHODOLOGY:**
+| WRONG (Lexical/Name Search) | CORRECT (Semantic/Category Search) |
+|-----------------------------|------------------------------------|
+| "Unqueue app" → finds "Queue Find Movies" | "Top salon booking apps India" → finds Fresha, Vagaro |
+| "Lumina brand" → finds "Lumina Lighting Inc" | "Top beauty brands India" → finds Nykaa, Mamaearth |
+| "Nexora company" → finds unrelated "Nexora LLC" | "Top AI SaaS platforms" → finds OpenAI, Anthropic |
+
+**REAL COMPETITOR EXAMPLES BY CATEGORY:**
+| User's Category | Search Query to Use | Expected Real Competitors |
+|-----------------|---------------------|---------------------------|
+| Salon Booking App | "Top salon appointment apps India/Global" | Fresha, Vagaro, Booksy, Urban Company |
+| Fashion E-commerce | "Top fashion e-commerce India" | Myntra, Ajio, Nykaa Fashion, Tata Cliq |
+| Food Delivery | "Top food delivery apps India" | Zomato, Swiggy, Uber Eats |
+| Beauty/Cosmetics | "Top beauty brands India" | Nykaa, Mamaearth, Sugar, Plum |
+| Fintech | "Top fintech apps India" | PhonePe, Google Pay, Paytm, CRED |
+| EdTech | "Top edtech platforms India" | Byju's, Unacademy, Vedantu |
+| SaaS/B2B | "Top [specific category] SaaS" | Segment by specific function |
+
+- For India: Use Indian market leaders (Nykaa, Zomato, Swiggy, Boat, Mamaearth, etc.)
+- For USA: Use US market leaders (Glossier, Warby Parker, Casper, etc.)
+- For Global: Use global leaders in that category
+- **NEVER use placeholder names** - only real, verifiable brands that ACTUALLY COMPETE in that market
 
 **Step 3: Assign Numeric Coordinates (0-100 scale)**
 Each competitor MUST have:
