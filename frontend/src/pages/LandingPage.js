@@ -266,7 +266,7 @@ const LandingPage = () => {
                 </div>
                 
                 <h1 className="text-5xl lg:text-7xl font-black text-slate-900 leading-[1.05] tracking-tight">
-                    Find your <br />
+                    Is Your Startup <br />
                     <span 
                       className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-fuchsia-500 to-orange-500"
                       style={{ 
@@ -274,11 +274,11 @@ const LandingPage = () => {
                         animation: 'gradient-x 3s linear infinite'
                       }}
                     >
-                        perfect name
+                        Name Legally Safe?
                     </span>
                     <br /> 
                     <span className="inline-flex items-center">
-                      in seconds
+                      Let AI Prove It
                       <span className="ml-3 text-5xl animate-bounce">🚀</span>
                     </span>
                 </h1>
