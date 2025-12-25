@@ -362,10 +362,11 @@ async def evaluate_brands(request: BrandEvaluationRequest):
             doc['request'] = request.model_dump()
             await db.evaluations.insert_one(doc)
             
-            # Return response with report_id
-            response_data = evaluation.model_dump()
-            response_data['report_id'] = report_id
-            return response_data
+            # Set report_id in the evaluation object
+            evaluation.report_id = report_id
+            
+            # Return the evaluation with report_id
+            return evaluation
             
         except Exception as e:
             last_error = e
