@@ -270,6 +270,16 @@ async def evaluate_brands(request: BrandEvaluationRequest):
     3. Compare against found competitors using INTENT MATCHING (not keyword matching)
     4. Ensure brand name fits the specified vibe and USP
 
+    ⚠️ CRITICAL: STRING SIMILARITY ANALYSIS (PRE-COMPUTED - DO NOT IGNORE!) ⚠️
+    {similarity_context}
+    
+    INSTRUCTION FOR SIMILARITY DATA:
+    - This analysis uses Levenshtein Distance, Jaro-Winkler, and Phonetic algorithms
+    - If ANY brand shows "FATAL CONFLICT" or "should_reject: true", you MUST issue REJECT verdict
+    - "Taata" vs "Tata" = REJECT (phonetic + string similarity match)
+    - "Nikee" vs "Nike" = REJECT (phonetic + string similarity match)
+    - DO NOT override this pre-computed similarity analysis
+    
     REAL-TIME DOMAIN AVAILABILITY DATA (DO NOT HALLUCINATE):
     {domain_context}
     INSTRUCTION: Use the above domain data for 'domain_analysis'.
