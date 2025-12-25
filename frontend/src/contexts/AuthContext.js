@@ -13,6 +13,8 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [pendingReportId, setPendingReportId] = useState(null);
 
     // Check authentication status on mount
     useEffect(() => {
@@ -39,9 +41,59 @@ export const AuthProvider = ({ children }) => {
     };
 
     // REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
-    const login = () => {
+    const loginWithGoogle = () => {
         const redirectUrl = window.location.origin + '/auth/callback';
         window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+    };
+
+    // Email/Password Registration
+    const registerWithEmail = async (email, password, name) => {
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email, password, name })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.detail || 'Registration failed');
+            }
+            
+            setUser(data);
+            setShowAuthModal(false);
+            return { success: true, user: data };
+        } catch (error) {
+            console.error('Registration error:', error);
+            return { success: false, error: error.message };
+        }
+    };
+
+    // Email/Password Login
+    const loginWithEmail = async (email, password) => {
+        try {
+            const response = await fetch('/api/auth/login/email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email, password })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.detail || 'Login failed');
+            }
+            
+            setUser(data);
+            setShowAuthModal(false);
+            return { success: true, user: data };
+        } catch (error) {
+            console.error('Login error:', error);
+            return { success: false, error: error.message };
+        }
     };
 
     const logout = async () => {
@@ -78,8 +130,32 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    // Open auth modal with optional pending report
+    const openAuthModal = (reportId = null) => {
+        setPendingReportId(reportId);
+        setShowAuthModal(true);
+    };
+
+    const closeAuthModal = () => {
+        setShowAuthModal(false);
+        setPendingReportId(null);
+    };
+
     return (
-        <AuthContext.Provider value={{ user, loading, login, logout, checkAuth, processSessionId }}>
+        <AuthContext.Provider value={{ 
+            user, 
+            loading, 
+            loginWithGoogle,
+            loginWithEmail,
+            registerWithEmail, 
+            logout, 
+            checkAuth, 
+            processSessionId,
+            showAuthModal,
+            openAuthModal,
+            closeAuthModal,
+            pendingReportId
+        }}>
             {children}
         </AuthContext.Provider>
     );
