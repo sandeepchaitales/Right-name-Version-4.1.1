@@ -560,8 +560,8 @@ const LandingPage = () => {
             </div>
         </div>
 
-        {/* Report Preview Section */}
-        <ReportPreviewCards />
+        {/* Report Preview Carousel */}
+        <ReportCarousel />
 
         {/* Feature Grid Section */}
         <div className="mt-28">
