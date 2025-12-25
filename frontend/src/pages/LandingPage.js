@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { useAuth } from '../contexts/AuthContext';
@@ -6,67 +6,64 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Sparkles, ArrowRight, CheckCircle, Shield, Globe, Zap, TrendingUp, Users, Building2, Star, ChevronDown } from "lucide-react";
+import { Loader2, ArrowRight, ChevronRight, X } from "lucide-react";
 import { toast } from "sonner";
-import { ReportCarousel } from '../components/ReportPreview';
 
-// Animated Logo Component
-const AnimatedLogo = () => (
-  <div className="relative w-24 h-24 md:w-32 md:h-32">
-    <div className="absolute inset-0 bg-gradient-to-br from-violet-500 via-fuchsia-500 to-orange-500 rounded-3xl animate-pulse opacity-50 blur-xl" />
-    <div className="relative w-full h-full bg-gradient-to-br from-violet-600 via-fuchsia-500 to-orange-500 rounded-3xl flex items-center justify-center shadow-2xl shadow-violet-500/30">
-      <Sparkles className="w-12 h-12 md:w-16 md:h-16 text-white" />
-    </div>
+// Logo component using the uploaded image
+const Logo = ({ className = "h-8" }) => (
+  <img 
+    src="https://customer-assets.emergentagent.com/job_a3b49cbe-3a5b-4133-8118-237a4bc11a65/artifacts/xw0jvksu_rightname.ai%20logo%20%281%29.png" 
+    alt="RIGHTNAME" 
+    className={className}
+  />
+);
+
+// Animated Hero Logo (larger version)
+const HeroLogo = () => (
+  <div className="relative">
+    <div className="absolute inset-0 bg-purple-500/30 blur-3xl rounded-full scale-150" />
+    <img 
+      src="https://customer-assets.emergentagent.com/job_a3b49cbe-3a5b-4133-8118-237a4bc11a65/artifacts/xw0jvksu_rightname.ai%20logo%20%281%29.png" 
+      alt="RIGHTNAME" 
+      className="relative h-20 md:h-28 lg:h-32"
+    />
   </div>
 );
 
 // Stats Component
 const StatItem = ({ value, label }) => (
-  <div className="text-center px-6 py-4">
-    <div className="text-2xl md:text-3xl font-black text-white">{value}</div>
-    <div className="text-xs md:text-sm text-slate-400 font-medium mt-1">{label}</div>
+  <div className="text-center">
+    <div className="text-2xl md:text-3xl font-bold text-white">{value}</div>
+    <div className="text-xs md:text-sm text-gray-500 mt-1">{label}</div>
   </div>
 );
 
-// Trusted By Avatars
-const TrustedByAvatars = () => (
-  <div className="flex items-center gap-3">
-    <div className="flex -space-x-3">
-      {[...Array(5)].map((_, i) => (
-        <div 
-          key={i} 
-          className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 border-2 border-slate-800 flex items-center justify-center"
-          style={{ zIndex: 5 - i }}
-        >
-          <span className="text-xs text-slate-300">👤</span>
-        </div>
-      ))}
-    </div>
-    <span className="text-sm text-slate-400">Trusted by <span className="text-white font-semibold">10,000+</span> founders</span>
-  </div>
-);
-
-// Feature Pill
-const FeaturePill = ({ icon: Icon, text, color }) => (
-  <div className={`flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm`}>
-    <Icon className={`w-4 h-4 ${color}`} />
-    <span className="text-sm font-medium text-slate-300">{text}</span>
-  </div>
-);
-
-// Showcase Card (for report previews)
-const ShowcaseCard = ({ gradient, title, score, verdict }) => (
-  <div className={`relative w-64 h-40 rounded-2xl ${gradient} p-4 flex flex-col justify-between shadow-xl transform hover:scale-105 transition-transform cursor-pointer`}>
-    <div>
-      <div className="text-xs text-white/60 font-medium">Brand Analysis</div>
-      <div className="text-lg font-bold text-white mt-1">{title}</div>
-    </div>
+// Showcase Card
+const ShowcaseCard = ({ title, score, verdict, delay = 0 }) => (
+  <div 
+    className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-5 border border-gray-800 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 cursor-pointer min-w-[240px]"
+    style={{ animationDelay: `${delay}ms` }}
+  >
+    <div className="text-xs text-gray-500 mb-1">Brand Analysis</div>
+    <div className="text-lg font-bold text-white mb-3">{title}</div>
     <div className="flex items-center justify-between">
       <div className="text-3xl font-black text-white">{score}</div>
-      <div className={`px-3 py-1 rounded-full text-xs font-bold ${verdict === 'GO' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}`}>
+      <div className={`px-3 py-1 rounded-full text-xs font-bold ${
+        verdict === 'GO' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 
+        'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+      }`}>
         {verdict}
       </div>
     </div>
+  </div>
+);
+
+// Feature Card
+const FeatureCard = ({ icon, title, description }) => (
+  <div className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800 hover:border-purple-500/30 transition-colors">
+    <div className="text-3xl mb-4">{icon}</div>
+    <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
+    <p className="text-sm text-gray-400 leading-relaxed">{description}</p>
   </div>
 );
 
@@ -91,25 +88,23 @@ const LandingPage = () => {
     "Technology & Software", "E-commerce & Retail", "Finance & Banking", "Healthcare & Pharma",
     "Food & Beverage", "Fashion & Apparel", "Beauty & Cosmetics", "Travel & Hospitality",
     "Real Estate & Property", "Education & EdTech", "Media & Entertainment", "Automotive",
-    "Manufacturing", "Agriculture", "Energy & Utilities", "Logistics & Supply Chain",
-    "Professional Services", "Non-Profit & NGO", "Sports & Fitness", "Home & Living",
-    "Pet Care", "Kids & Baby", "Jewelry & Accessories", "Gaming", "Other"
+    "Professional Services", "Sports & Fitness", "Home & Living", "Gaming", "Other"
   ];
 
   const productTypes = [
     { value: "Physical", label: "Physical Product" },
     { value: "Digital", label: "Digital Product/App" },
     { value: "Service", label: "Service" },
-    { value: "Hybrid", label: "Hybrid (Product + Service)" }
+    { value: "Hybrid", label: "Hybrid" }
   ];
 
   const uspOptions = [
-    { value: "Price", label: "Best value for money" },
+    { value: "Price", label: "Best value" },
     { value: "Quality", label: "Superior quality" },
-    { value: "Speed", label: "Fastest delivery" },
+    { value: "Speed", label: "Fastest" },
     { value: "Design", label: "Beautiful design" },
     { value: "Eco-Friendly", label: "Sustainable" },
-    { value: "Innovation", label: "Most innovative" }
+    { value: "Innovation", label: "Innovative" }
   ];
 
   const brandVibes = [
@@ -163,56 +158,46 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
-      {/* Background Effects */}
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-violet-600/20 via-fuchsia-600/10 to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-blue-600/10 to-transparent rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-tl from-orange-600/10 to-transparent rounded-full blur-3xl" />
-        
-        {/* Grid pattern overlay */}
+        {/* Subtle grid pattern */}
         <div 
-          className="absolute inset-0 opacity-[0.02]"
+          className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)`,
-            backgroundSize: '50px 50px'
+            backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
           }}
         />
+        {/* Purple glow at top */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-purple-600/10 rounded-full blur-[120px]" />
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-50 max-w-7xl mx-auto px-6 py-6">
+      <nav className="relative z-50 max-w-6xl mx-auto px-6 py-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-violet-600 via-fuchsia-500 to-orange-500 rounded-xl flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-              RIGHTNAME
-            </span>
-          </div>
+          <Logo className="h-6 md:h-8" />
           
           <div className="flex items-center gap-4">
             {authLoading ? (
-              <div className="w-24 h-10 bg-slate-800 rounded-lg animate-pulse" />
+              <div className="w-20 h-9 bg-gray-800 rounded-lg animate-pulse" />
             ) : user ? (
               <div className="flex items-center gap-3">
-                <span className="text-sm text-slate-400">Hi, {user.name?.split(' ')[0]}</span>
-                <Button 
-                  variant="ghost" 
+                <span className="text-sm text-gray-400 hidden sm:inline">{user.name?.split(' ')[0]}</span>
+                <button 
                   onClick={logout}
-                  className="text-slate-400 hover:text-white hover:bg-slate-800"
+                  className="text-sm text-gray-400 hover:text-white transition-colors"
                 >
                   Sign Out
-                </Button>
+                </button>
               </div>
             ) : (
-              <Button 
+              <button 
                 onClick={() => openAuthModal()}
-                className="bg-white text-slate-900 hover:bg-slate-100 font-semibold px-6"
+                className="text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 px-5 py-2.5 rounded-lg transition-colors"
               >
                 Sign In
-              </Button>
+              </button>
             )}
           </div>
         </div>
@@ -220,138 +205,139 @@ const LandingPage = () => {
 
       {/* Hero Section */}
       <main className="relative z-10">
-        <div className="max-w-7xl mx-auto px-6 pt-12 pb-20 md:pt-20 md:pb-32">
+        <div className="max-w-6xl mx-auto px-6 pt-16 pb-20 md:pt-24 md:pb-32">
           
-          {/* Centered Hero Content */}
-          <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+          {/* Centered Hero */}
+          <div className="flex flex-col items-center text-center">
             
-            {/* Animated Logo */}
-            <AnimatedLogo />
+            {/* Logo with glow */}
+            <HeroLogo />
             
-            {/* Main Headline */}
-            <h1 className="mt-10 text-4xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight">
-              <span className="text-white">Validate Your</span>
+            {/* Headline */}
+            <h1 className="mt-12 text-4xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight max-w-4xl">
+              Validate Your Brand Name
               <br />
-              <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-orange-400 bg-clip-text text-transparent">
-                Brand Name
-              </span>
-              <span className="text-white"> in Minutes</span>
+              <span className="text-purple-500">in Minutes</span>
             </h1>
             
             {/* Subtitle */}
-            <p className="mt-6 text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed">
-              AI-powered consulting-grade analysis for trademark risk, cultural resonance, 
-              domain availability, and competitive positioning across global markets.
+            <p className="mt-6 text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed">
+              AI-powered consulting-grade analysis for trademark risk, 
+              cultural resonance, and competitive positioning.
             </p>
             
-            {/* CTA Buttons */}
-            <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-              <Button 
-                onClick={() => setShowForm(true)}
-                className="h-14 px-8 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-orange-500 hover:from-violet-500 hover:via-fuchsia-500 hover:to-orange-400 text-white font-semibold text-lg rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/30 transition-all"
-              >
-                Start Free Analysis
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              
-              <Button 
-                variant="ghost"
-                className="h-14 px-8 text-slate-400 hover:text-white hover:bg-slate-800/50 font-medium text-lg rounded-xl"
-                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                See How It Works
-                <ChevronDown className="ml-2 w-5 h-5" />
-              </Button>
-            </div>
+            {/* CTA Button */}
+            <button 
+              onClick={() => setShowForm(true)}
+              className="mt-10 group flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white font-medium px-8 py-4 rounded-xl transition-all duration-200 hover:scale-105"
+            >
+              Start Free Analysis
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
             
-            {/* Trust Indicators */}
-            <div className="mt-12">
-              <TrustedByAvatars />
+            {/* Trust Badge */}
+            <div className="mt-8 flex items-center gap-3">
+              <div className="flex -space-x-2">
+                {[...Array(4)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 border-2 border-black flex items-center justify-center text-xs"
+                  >
+                    {['🚀', '💡', '⭐', '🎯'][i]}
+                  </div>
+                ))}
+              </div>
+              <span className="text-sm text-gray-500">
+                Trusted by <span className="text-white font-medium">10,000+</span> founders
+              </span>
             </div>
           </div>
           
-          {/* Stats Bar */}
-          <div className="mt-20 max-w-3xl mx-auto">
-            <div className="flex items-center justify-center divide-x divide-slate-700/50 bg-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-800/50">
-              <StatItem value="50K+" label="Names Analyzed" />
-              <StatItem value="30s" label="Avg Report Time" />
-              <StatItem value="180+" label="Countries" />
+          {/* Stats */}
+          <div className="mt-24 flex items-center justify-center gap-12 md:gap-20">
+            <StatItem value="50K+" label="Names Analyzed" />
+            <div className="w-px h-10 bg-gray-800" />
+            <StatItem value="30s" label="Avg Report Time" />
+            <div className="w-px h-10 bg-gray-800" />
+            <StatItem value="180+" label="Countries" />
+            <div className="w-px h-10 bg-gray-800 hidden md:block" />
+            <div className="hidden md:block">
               <StatItem value="98%" label="Accuracy" />
             </div>
           </div>
           
           {/* Showcase Cards */}
-          <div className="mt-20 flex items-center justify-center gap-6 overflow-hidden">
-            <ShowcaseCard gradient="bg-gradient-to-br from-violet-600 to-indigo-700" title="LUXEVA" score="89" verdict="GO" />
-            <ShowcaseCard gradient="bg-gradient-to-br from-fuchsia-600 to-pink-700" title="ZENOVA" score="85" verdict="GO" />
-            <ShowcaseCard gradient="bg-gradient-to-br from-orange-500 to-red-600" title="NOVAPAY" score="72" verdict="CONDITIONAL" />
+          <div className="mt-24 flex items-center justify-center gap-4 md:gap-6 overflow-x-auto pb-4 scrollbar-hide">
+            <ShowcaseCard title="LUXEVA" score="89" verdict="GO" delay={0} />
+            <ShowcaseCard title="NOVAGLOW" score="83" verdict="GO" delay={100} />
+            <ShowcaseCard title="ZENITH" score="76" verdict="CONDITIONAL" delay={200} />
           </div>
         </div>
 
         {/* Features Section */}
-        <section id="features" className="py-20 bg-slate-900/50">
-          <div className="max-w-7xl mx-auto px-6">
+        <section className="py-24 border-t border-gray-900">
+          <div className="max-w-6xl mx-auto px-6">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-white">Everything You Need to Validate Your Brand</h2>
-              <p className="mt-4 text-slate-400 max-w-2xl mx-auto">
-                Comprehensive analysis powered by AI, delivering insights that would take consultants weeks in just seconds.
+              <h2 className="text-3xl md:text-4xl font-bold text-white">What You Get</h2>
+              <p className="mt-4 text-gray-400 max-w-xl mx-auto">
+                Everything you need to validate your brand name before launch
               </p>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                { icon: Shield, title: "Legal Risk Matrix", desc: "Trademark conflicts, genericness, and rebranding probability analysis", color: "text-emerald-400", bg: "bg-emerald-500/10" },
-                { icon: Globe, title: "Global Culture Fit", desc: "Linguistic and cultural resonance across 180+ countries", color: "text-blue-400", bg: "bg-blue-500/10" },
-                { icon: TrendingUp, title: "Market Positioning", desc: "Competitor analysis with strategic positioning matrices per country", color: "text-violet-400", bg: "bg-violet-500/10" },
-                { icon: Zap, title: "Domain & Social", desc: "Real-time availability check for domains and social handles", color: "text-orange-400", bg: "bg-orange-500/10" },
-              ].map((feature, i) => (
-                <div key={i} className={`p-6 rounded-2xl ${feature.bg} border border-slate-800/50 hover:border-slate-700/50 transition-colors`}>
-                  <feature.icon className={`w-10 h-10 ${feature.color} mb-4`} />
-                  <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-                  <p className="text-sm text-slate-400">{feature.desc}</p>
-                </div>
-              ))}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <FeatureCard 
+                icon="⚖️" 
+                title="Legal Risk Matrix" 
+                description="Trademark conflicts, genericness analysis, and rebranding probability assessment"
+              />
+              <FeatureCard 
+                icon="🌍" 
+                title="Global Culture Fit" 
+                description="Linguistic and cultural resonance analysis across 180+ countries"
+              />
+              <FeatureCard 
+                icon="📊" 
+                title="Market Positioning" 
+                description="Competitor analysis with strategic positioning matrices by country"
+              />
+              <FeatureCard 
+                icon="🔍" 
+                title="Domain & Social" 
+                description="Real-time availability check for domains and social media handles"
+              />
             </div>
-          </div>
-        </section>
-
-        {/* Report Preview Carousel */}
-        <section className="py-20">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-white">See What's Inside Your Report</h2>
-              <p className="mt-4 text-slate-400">Detailed, actionable insights delivered in a beautiful format</p>
-            </div>
-            <ReportCarousel />
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-b from-slate-900/50 to-slate-950">
-          <div className="max-w-3xl mx-auto px-6 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">Ready to Validate Your Brand?</h2>
-            <p className="mt-4 text-slate-400">Join thousands of founders who trust RIGHTNAME for brand validation</p>
-            <Button 
+        <section className="py-24 border-t border-gray-900">
+          <div className="max-w-2xl mx-auto px-6 text-center">
+            <Logo className="h-12 mx-auto mb-8" />
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
+              Ready to validate your brand?
+            </h2>
+            <p className="mt-4 text-gray-400">
+              Get your comprehensive brand analysis report in under a minute
+            </p>
+            <button 
               onClick={() => setShowForm(true)}
-              className="mt-8 h-14 px-10 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-orange-500 hover:from-violet-500 hover:via-fuchsia-500 hover:to-orange-400 text-white font-semibold text-lg rounded-xl shadow-lg shadow-violet-500/25"
+              className="mt-8 group flex items-center gap-2 bg-white text-black font-medium px-8 py-4 rounded-xl mx-auto transition-all duration-200 hover:scale-105"
             >
               Get Started Free
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
+              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="py-10 border-t border-slate-800/50">
-          <div className="max-w-7xl mx-auto px-6">
+        <footer className="py-8 border-t border-gray-900">
+          <div className="max-w-6xl mx-auto px-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-violet-600 via-fuchsia-500 to-orange-500 rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-sm text-slate-500">© 2025 RIGHTNAME. All rights reserved.</span>
+                <Logo className="h-5" />
+                <span className="text-sm text-gray-600">© 2025</span>
               </div>
-              <div className="flex items-center gap-6 text-sm text-slate-500">
+              <div className="flex items-center gap-6 text-sm text-gray-600">
                 <a href="#" className="hover:text-white transition-colors">Terms</a>
                 <a href="#" className="hover:text-white transition-colors">Privacy</a>
                 <a href="#" className="hover:text-white transition-colors">Contact</a>
@@ -364,173 +350,174 @@ const LandingPage = () => {
       {/* Analysis Form Modal */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowForm(false)} />
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={() => setShowForm(false)} />
           
-          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl">
-            <div className="sticky top-0 bg-slate-900 border-b border-slate-800 px-8 py-6 flex items-center justify-between">
+          <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto bg-gray-950 rounded-2xl border border-gray-800">
+            {/* Header */}
+            <div className="sticky top-0 bg-gray-950 border-b border-gray-800 px-6 py-5 flex items-center justify-between">
               <div>
-                <h3 className="text-xl font-bold text-white">Start Your Analysis</h3>
-                <p className="text-sm text-slate-400 mt-1">Enter your brand details for a comprehensive report</p>
+                <h3 className="text-lg font-bold text-white">Start Analysis</h3>
+                <p className="text-sm text-gray-500 mt-0.5">Enter your brand details</p>
               </div>
               <button 
                 onClick={() => setShowForm(false)}
-                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+                className="w-9 h-9 rounded-lg bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-8 space-y-6">
+            <form onSubmit={handleSubmit} className="p-6 space-y-5">
               {/* Brand Name */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-slate-300">Brand Name(s) *</Label>
+              <div>
+                <Label className="text-sm text-gray-400 mb-2 block">Brand Name(s) *</Label>
                 <Input 
                   name="brand_names"
                   value={formData.brand_names}
                   onChange={handleChange}
-                  placeholder="e.g. LUMINA, VESTRA, ZENOVA"
-                  className="h-14 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 focus:border-violet-500 focus:ring-violet-500/20 rounded-xl text-lg"
+                  placeholder="e.g. LUMINA, ZENOVA"
+                  className="h-12 bg-gray-900 border-gray-800 text-white placeholder:text-gray-600 focus:border-purple-500 focus:ring-purple-500/20 rounded-lg"
                   required
                 />
-                <p className="text-xs text-slate-500">Separate multiple names with commas</p>
+                <p className="text-xs text-gray-600 mt-1.5">Separate multiple names with commas</p>
               </div>
 
               {/* Industry & Category */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-300">Industry</Label>
+                <div>
+                  <Label className="text-sm text-gray-400 mb-2 block">Industry</Label>
                   <Select onValueChange={(val) => handleSelectChange('industry', val)} value={formData.industry}>
-                    <SelectTrigger className="h-12 bg-slate-800/50 border-slate-700 text-white rounded-xl">
-                      <SelectValue placeholder="Select industry..." />
+                    <SelectTrigger className="h-12 bg-gray-900 border-gray-800 text-white rounded-lg">
+                      <SelectValue placeholder="Select..." />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-900 border-slate-700">
+                    <SelectContent className="bg-gray-900 border-gray-800">
                       {industries.map((ind) => (
-                        <SelectItem key={ind} value={ind} className="text-slate-300 focus:bg-slate-800 focus:text-white">{ind}</SelectItem>
+                        <SelectItem key={ind} value={ind} className="text-gray-300 focus:bg-gray-800 focus:text-white">{ind}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-300">Category</Label>
+                <div>
+                  <Label className="text-sm text-gray-400 mb-2 block">Category</Label>
                   <Input 
                     name="category"
                     value={formData.category}
                     onChange={handleChange}
-                    placeholder="e.g. DTC Skincare"
-                    className="h-12 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 rounded-xl"
+                    placeholder="e.g. Skincare"
+                    className="h-12 bg-gray-900 border-gray-800 text-white placeholder:text-gray-600 rounded-lg"
                   />
                 </div>
               </div>
 
-              {/* Product Type & USP */}
+              {/* Product Type & Positioning */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-300">Product Type</Label>
+                <div>
+                  <Label className="text-sm text-gray-400 mb-2 block">Product Type</Label>
                   <Select onValueChange={(val) => handleSelectChange('product_type', val)} value={formData.product_type}>
-                    <SelectTrigger className="h-12 bg-slate-800/50 border-slate-700 text-white rounded-xl">
+                    <SelectTrigger className="h-12 bg-gray-900 border-gray-800 text-white rounded-lg">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-900 border-slate-700">
+                    <SelectContent className="bg-gray-900 border-gray-800">
                       {productTypes.map((pt) => (
-                        <SelectItem key={pt.value} value={pt.value} className="text-slate-300 focus:bg-slate-800 focus:text-white">{pt.label}</SelectItem>
+                        <SelectItem key={pt.value} value={pt.value} className="text-gray-300 focus:bg-gray-800 focus:text-white">{pt.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-300">USP</Label>
-                  <Select onValueChange={(val) => handleSelectChange('usp', val)} value={formData.usp}>
-                    <SelectTrigger className="h-12 bg-slate-800/50 border-slate-700 text-white rounded-xl">
-                      <SelectValue placeholder="Select USP..." />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-900 border-slate-700">
-                      {uspOptions.map((usp) => (
-                        <SelectItem key={usp.value} value={usp.value} className="text-slate-300 focus:bg-slate-800 focus:text-white">{usp.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {/* Brand Vibe & Positioning */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-300">Brand Vibe</Label>
-                  <Select onValueChange={(val) => handleSelectChange('brand_vibe', val)} value={formData.brand_vibe}>
-                    <SelectTrigger className="h-12 bg-slate-800/50 border-slate-700 text-white rounded-xl">
-                      <SelectValue placeholder="Select vibe..." />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-900 border-slate-700">
-                      {brandVibes.map((vibe) => (
-                        <SelectItem key={vibe.value} value={vibe.value} className="text-slate-300 focus:bg-slate-800 focus:text-white">{vibe.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-300">Positioning</Label>
+                <div>
+                  <Label className="text-sm text-gray-400 mb-2 block">Positioning</Label>
                   <Select onValueChange={(val) => handleSelectChange('positioning', val)} value={formData.positioning}>
-                    <SelectTrigger className="h-12 bg-slate-800/50 border-slate-700 text-white rounded-xl">
+                    <SelectTrigger className="h-12 bg-gray-900 border-gray-800 text-white rounded-lg">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-900 border-slate-700">
-                      <SelectItem value="Budget" className="text-slate-300 focus:bg-slate-800 focus:text-white">Budget</SelectItem>
-                      <SelectItem value="Mid-Range" className="text-slate-300 focus:bg-slate-800 focus:text-white">Mid-Range</SelectItem>
-                      <SelectItem value="Premium" className="text-slate-300 focus:bg-slate-800 focus:text-white">Premium</SelectItem>
-                      <SelectItem value="Luxury" className="text-slate-300 focus:bg-slate-800 focus:text-white">Luxury</SelectItem>
+                    <SelectContent className="bg-gray-900 border-gray-800">
+                      <SelectItem value="Budget" className="text-gray-300 focus:bg-gray-800 focus:text-white">Budget</SelectItem>
+                      <SelectItem value="Mid-Range" className="text-gray-300 focus:bg-gray-800 focus:text-white">Mid-Range</SelectItem>
+                      <SelectItem value="Premium" className="text-gray-300 focus:bg-gray-800 focus:text-white">Premium</SelectItem>
+                      <SelectItem value="Luxury" className="text-gray-300 focus:bg-gray-800 focus:text-white">Luxury</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              {/* Market Scope & Countries */}
+              {/* USP & Brand Vibe */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-300">Market Scope</Label>
-                  <Select onValueChange={(val) => handleSelectChange('market_scope', val)} value={formData.market_scope}>
-                    <SelectTrigger className="h-12 bg-slate-800/50 border-slate-700 text-white rounded-xl">
-                      <SelectValue />
+                <div>
+                  <Label className="text-sm text-gray-400 mb-2 block">USP</Label>
+                  <Select onValueChange={(val) => handleSelectChange('usp', val)} value={formData.usp}>
+                    <SelectTrigger className="h-12 bg-gray-900 border-gray-800 text-white rounded-lg">
+                      <SelectValue placeholder="Select..." />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-900 border-slate-700">
-                      <SelectItem value="Single Country" className="text-slate-300 focus:bg-slate-800 focus:text-white">Single Country</SelectItem>
-                      <SelectItem value="Multi-Country" className="text-slate-300 focus:bg-slate-800 focus:text-white">Multi-Country</SelectItem>
-                      <SelectItem value="Global" className="text-slate-300 focus:bg-slate-800 focus:text-white">Global</SelectItem>
+                    <SelectContent className="bg-gray-900 border-gray-800">
+                      {uspOptions.map((usp) => (
+                        <SelectItem key={usp.value} value={usp.value} className="text-gray-300 focus:bg-gray-800 focus:text-white">{usp.label}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-300">Target Countries</Label>
+                <div>
+                  <Label className="text-sm text-gray-400 mb-2 block">Brand Vibe</Label>
+                  <Select onValueChange={(val) => handleSelectChange('brand_vibe', val)} value={formData.brand_vibe}>
+                    <SelectTrigger className="h-12 bg-gray-900 border-gray-800 text-white rounded-lg">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-900 border-gray-800">
+                      {brandVibes.map((vibe) => (
+                        <SelectItem key={vibe.value} value={vibe.value} className="text-gray-300 focus:bg-gray-800 focus:text-white">{vibe.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Market & Countries */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm text-gray-400 mb-2 block">Market Scope</Label>
+                  <Select onValueChange={(val) => handleSelectChange('market_scope', val)} value={formData.market_scope}>
+                    <SelectTrigger className="h-12 bg-gray-900 border-gray-800 text-white rounded-lg">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-900 border-gray-800">
+                      <SelectItem value="Single Country" className="text-gray-300 focus:bg-gray-800 focus:text-white">Single Country</SelectItem>
+                      <SelectItem value="Multi-Country" className="text-gray-300 focus:bg-gray-800 focus:text-white">Multi-Country</SelectItem>
+                      <SelectItem value="Global" className="text-gray-300 focus:bg-gray-800 focus:text-white">Global</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-sm text-gray-400 mb-2 block">Countries</Label>
                   <Input 
                     name="countries"
                     value={formData.countries}
                     onChange={handleChange}
-                    placeholder="USA, India, UK, Germany"
-                    className="h-12 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-500 rounded-xl"
+                    placeholder="USA, India, UK"
+                    className="h-12 bg-gray-900 border-gray-800 text-white placeholder:text-gray-600 rounded-lg"
                   />
                 </div>
               </div>
 
-              {/* Submit Button */}
+              {/* Submit */}
               <Button 
                 type="submit" 
-                className="w-full h-14 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-orange-500 hover:from-violet-500 hover:via-fuchsia-500 hover:to-orange-400 text-white text-lg font-semibold rounded-xl shadow-lg shadow-violet-500/25"
+                className="w-full h-12 bg-purple-600 hover:bg-purple-500 text-white font-medium rounded-lg transition-colors"
                 disabled={loading}
               >
                 {loading ? (
                   <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Analyzing...
                   </>
                 ) : (
                   <>
                     Generate Report
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </>
                 )}
               </Button>
               
-              <p className="text-center text-xs text-slate-500">
-                Free analysis • No credit card required • Results in ~30 seconds
+              <p className="text-center text-xs text-gray-600">
+                Free analysis • No credit card required
               </p>
             </form>
           </div>
