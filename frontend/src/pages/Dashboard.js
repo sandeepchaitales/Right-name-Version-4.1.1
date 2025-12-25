@@ -633,9 +633,20 @@ const Dashboard = () => {
                         </div>
                         {isAuthenticated ? (
                             <div className="space-y-3">
-                                {brand.competitor_analysis.true_market_competitors?.slice(0, 5).map((comp, i) => (
+                                {/* Support both data structures */}
+                                {(brand.competitor_analysis.competitors || brand.competitor_analysis.true_market_competitors)?.slice(0, 6).map((comp, i) => (
                                     <CompetitorCard key={i} competitor={comp} />
                                 ))}
+                                {/* Positioning Matrix Info */}
+                                {(brand.competitor_analysis.x_axis_label || brand.competitor_analysis.y_axis_label) && (
+                                    <PrintCard>
+                                        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                                            <p className="text-sm text-blue-700">
+                                                <strong>Positioning Matrix:</strong> {brand.competitor_analysis.x_axis_label} vs {brand.competitor_analysis.y_axis_label}
+                                            </p>
+                                        </div>
+                                    </PrintCard>
+                                )}
                                 {brand.competitor_analysis.analysis_note && (
                                     <PrintCard>
                                         <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
