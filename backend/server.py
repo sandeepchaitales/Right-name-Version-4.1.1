@@ -190,7 +190,6 @@ def repair_json(s):
 def aggressive_json_repair(json_str):
     """
     More aggressive JSON repair for severely malformed responses.
-    Uses json_repair library if available, otherwise applies heuristics.
     """
     import json
     
@@ -211,35 +210,89 @@ def aggressive_json_repair(json_str):
         
         logging.error(f"Context around error: ...'{context}'...")
         
-        # Try to fix common patterns around the error
-        # Pattern 1: Missing comma after a string value
-        # Look backwards from error position to find the issue
         before_error = repaired[:error_pos]
         after_error = repaired[error_pos:]
         
-        # If error is at a quote that should be preceded by comma
+        # Pattern 1: Missing comma after a string value ending with "
         if after_error and after_error[0] == '"':
-            # Check if we need a comma before
             stripped_before = before_error.rstrip()
-            if stripped_before and stripped_before[-1] not in [',', '{', '[', ':']:
+            if stripped_before and stripped_before[-1] == '"':
+                # Need comma between two strings
                 repaired = stripped_before + ',' + after_error
                 try:
                     json.loads(repaired)
+                    logging.info("Fixed by adding comma between strings")
+                    return repaired
+                except:
+                    pass
+            elif stripped_before and stripped_before[-1] not in [',', '{', '[', ':']:
+                repaired = stripped_before + ',' + after_error
+                try:
+                    json.loads(repaired)
+                    logging.info("Fixed by adding comma before string")
                     return repaired
                 except:
                     pass
         
-        # Pattern 2: Truncated string value - close it
-        # Find the last unclosed quote
+        # Pattern 2: Error is "Expecting ',' delimiter" - find and add the missing comma
+        if "Expecting ',' delimiter" in str(e) or "Expecting ," in str(e):
+            # Search backwards for end of previous value (", }, ])
+            search_pos = error_pos - 1
+            while search_pos > 0 and repaired[search_pos] in ' \t\n\r':
+                search_pos -= 1
+            
+            if search_pos > 0 and repaired[search_pos] in '"]}':
+                # Insert comma after this position
+                repaired = repaired[:search_pos+1] + ',' + repaired[search_pos+1:]
+                try:
+                    json.loads(repaired)
+                    logging.info(f"Fixed by inserting comma at position {search_pos+1}")
+                    return repaired
+                except:
+                    pass
+        
+        # Pattern 3: Truncated string - close it
         quote_positions = [i for i, c in enumerate(before_error) if c == '"' and (i == 0 or before_error[i-1] != '\\')]
         if len(quote_positions) % 2 == 1:  # Odd number means unclosed string
-            last_quote = quote_positions[-1]
-            # Close the string and add comma if needed
-            fix_point = error_pos
-            repaired = before_error[:fix_point] + '"' + after_error
+            repaired = before_error + '",' + after_error
             try:
                 json.loads(repaired)
+                logging.info("Fixed by closing unclosed string")
                 return repaired
+            except:
+                pass
+        
+        # Pattern 4: Try json_repair library if available
+        try:
+            from json_repair import repair_json as lib_repair
+            repaired = lib_repair(json_str)
+            json.loads(repaired)
+            logging.info("Fixed using json_repair library")
+            return repaired
+        except ImportError:
+            pass
+        except:
+            pass
+        
+        # Pattern 5: Last resort - try to extract valid JSON subset
+        # Find matching braces
+        brace_count = 0
+        last_valid_pos = 0
+        for i, c in enumerate(repaired):
+            if c == '{':
+                brace_count += 1
+            elif c == '}':
+                brace_count -= 1
+                if brace_count == 0:
+                    last_valid_pos = i + 1
+                    break
+        
+        if last_valid_pos > 0:
+            subset = repaired[:last_valid_pos]
+            try:
+                json.loads(subset)
+                logging.info(f"Fixed by truncating to valid JSON subset (length {last_valid_pos})")
+                return subset
             except:
                 pass
         
