@@ -652,6 +652,138 @@ class BrandEvaluationTester:
             self.log_test("Trademark Research - Nexofy Exception", False, str(e))
             return False
 
+    def test_emergent_llm_key_smoke_test(self):
+        """Smoke test for newly configured Emergent LLM key with TestBrand"""
+        payload = {
+            "brand_names": ["TestBrand"],
+            "category": "Technology",
+            "positioning": "Premium software solutions",
+            "market_scope": "Multi-Country",
+            "countries": ["USA"]
+        }
+        
+        try:
+            print(f"\n🔍 SMOKE TEST: Testing newly configured Emergent LLM key with TestBrand...")
+            print(f"Payload: {json.dumps(payload, indent=2)}")
+            
+            response = requests.post(
+                f"{self.api_url}/evaluate", 
+                json=payload, 
+                headers={'Content-Type': 'application/json'},
+                timeout=180  # Extended timeout for LLM processing
+            )
+            
+            print(f"Response Status: {response.status_code}")
+            
+            # Check for budget exceeded error first
+            if response.status_code == 402:
+                self.log_test("Emergent LLM Key - Budget Check", False, "Budget exceeded error - LLM key needs credits")
+                return False
+            
+            if response.status_code != 200:
+                error_msg = f"HTTP {response.status_code}: {response.text[:300]}"
+                # Check if error message contains budget-related keywords
+                if any(keyword in response.text.lower() for keyword in ["budget", "exceeded", "credits", "quota"]):
+                    self.log_test("Emergent LLM Key - Budget Error", False, f"Budget-related error: {error_msg}")
+                else:
+                    self.log_test("Emergent LLM Key - HTTP Error", False, error_msg)
+                return False
+            
+            try:
+                data = response.json()
+                print(f"✅ Response received successfully, checking structure...")
+                
+                # Test 1: Check for budget errors in response content
+                response_str = json.dumps(data).lower()
+                if any(keyword in response_str for keyword in ["budget exceeded", "quota exceeded", "credits"]):
+                    self.log_test("Emergent LLM Key - Response Budget Error", False, "Budget exceeded error found in response content")
+                    return False
+                
+                # Test 2: Check required top-level fields
+                required_fields = ["executive_summary", "brand_scores", "comparison_verdict"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("Emergent LLM Key - Required Fields", False, f"Missing required fields: {missing_fields}")
+                    return False
+                
+                # Test 3: Check brand_scores structure
+                if not data.get("brand_scores") or len(data["brand_scores"]) == 0:
+                    self.log_test("Emergent LLM Key - Brand Scores", False, "No brand scores returned")
+                    return False
+                
+                brand = data["brand_scores"][0]
+                
+                # Test 4: Check brand name matches
+                if brand.get("brand_name") != "TestBrand":
+                    self.log_test("Emergent LLM Key - Brand Name", False, f"Expected 'TestBrand', got '{brand.get('brand_name')}'")
+                    return False
+                
+                # Test 5: Check name_score_index (NameScore)
+                if "namescore" not in brand:
+                    self.log_test("Emergent LLM Key - NameScore Index", False, "namescore field missing")
+                    return False
+                
+                namescore = brand.get("namescore")
+                if not isinstance(namescore, (int, float)) or not (0 <= namescore <= 100):
+                    self.log_test("Emergent LLM Key - NameScore Range", False, f"Invalid namescore: {namescore} (should be 0-100)")
+                    return False
+                
+                # Test 6: Check trademark_research field
+                if "trademark_research" not in brand:
+                    self.log_test("Emergent LLM Key - Trademark Research", False, "trademark_research field missing")
+                    return False
+                
+                tm_research = brand["trademark_research"]
+                if not tm_research:
+                    self.log_test("Emergent LLM Key - Trademark Data", False, "trademark_research is null/empty")
+                    return False
+                
+                # Test 7: Check executive_summary content
+                exec_summary = data.get("executive_summary", "")
+                if len(exec_summary) < 50:  # Should be substantial
+                    self.log_test("Emergent LLM Key - Executive Summary", False, f"Executive summary too short: {len(exec_summary)} chars")
+                    return False
+                
+                # Test 8: Check verdict field
+                if "verdict" not in brand:
+                    self.log_test("Emergent LLM Key - Verdict", False, "verdict field missing")
+                    return False
+                
+                verdict = brand.get("verdict", "")
+                valid_verdicts = ["APPROVE", "CAUTION", "REJECT"]
+                if verdict not in valid_verdicts:
+                    self.log_test("Emergent LLM Key - Verdict Value", False, f"Invalid verdict: {verdict} (should be one of {valid_verdicts})")
+                    return False
+                
+                # Test 9: Check additional expected fields
+                expected_brand_fields = ["summary", "domain_analysis", "visibility_analysis"]
+                missing_brand_fields = [field for field in expected_brand_fields if field not in brand]
+                
+                if missing_brand_fields:
+                    print(f"⚠️  Warning: Missing optional brand fields: {missing_brand_fields}")
+                
+                print(f"✅ TestBrand evaluation completed successfully:")
+                print(f"   - NameScore: {namescore}/100")
+                print(f"   - Verdict: {verdict}")
+                print(f"   - Executive Summary: {len(exec_summary)} characters")
+                print(f"   - Trademark Research: Present")
+                
+                self.log_test("Emergent LLM Key - Smoke Test", True, 
+                            f"All checks passed. NameScore: {namescore}/100, Verdict: {verdict}, No budget errors detected")
+                return True
+                
+            except json.JSONDecodeError as e:
+                self.log_test("Emergent LLM Key - JSON Parse", False, f"Invalid JSON response: {str(e)}")
+                return False
+                
+        except requests.exceptions.Timeout:
+            self.log_test("Emergent LLM Key - Timeout", False, "Request timed out after 180 seconds")
+            return False
+        except Exception as e:
+            self.log_test("Emergent LLM Key - Exception", False, str(e))
+            return False
+
     def run_all_tests(self):
         """Run all backend tests"""
         print("🚀 Starting Backend API Tests...")
