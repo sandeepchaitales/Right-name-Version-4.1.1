@@ -1691,6 +1691,16 @@ const Dashboard = () => {
                     </div>
                 )}
 
+                {/* INPUT SUMMARY SECTION */}
+                <section className="print-section">
+                    <InputSummarySection 
+                        query={query} 
+                        brandName={brand.brand_name} 
+                        reportId={data.report_id}
+                        date={currentDate}
+                    />
+                </section>
+
                 {/* SECTION 1: HERO */}
                 <section className="print-section">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 print:gap-4">
