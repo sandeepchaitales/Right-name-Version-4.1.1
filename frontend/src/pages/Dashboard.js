@@ -1638,7 +1638,7 @@ const Dashboard = () => {
             `}</style>
 
             {/* Cover Page */}
-            <CoverPage brandName={brand.brand_name} score={brand.namescore} verdict={brand.verdict} date={currentDate} query={query} />
+            <CoverPage brandName={brand.brand_name} score={brand.namescore} verdict={brand.verdict} date={currentDate} query={query} reportId={data.report_id} />
 
             {/* Navbar */}
             <div className="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center no-print sticky top-0 z-50">
