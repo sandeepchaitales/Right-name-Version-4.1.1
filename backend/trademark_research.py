@@ -715,20 +715,35 @@ def get_known_data(brand_name: str) -> Dict[str, Any]:
     return {}
 
 
-def get_relevant_precedents(category: str, industry: str) -> List[Dict[str, Any]]:
-    """Get relevant legal precedents for the category/industry"""
+def get_relevant_precedents(category: str, industry: str, countries: List[str] = None) -> List[Dict[str, Any]]:
+    """Get relevant legal precedents for the category/industry based on selected countries"""
     precedents = []
     
-    # Always include phonetic similarity cases
-    precedents.extend(LEGAL_PRECEDENTS_DB.get("phonetic_similarity", []))
+    # Determine which country's precedents to use
+    if not countries:
+        countries = ["USA"]  # Default to USA
+    
+    primary_country = countries[0]
+    
+    # Resolve country aliases
+    country_key = COUNTRY_ALIASES.get(primary_country, primary_country)
+    
+    # If country not found in database, default to USA
+    if country_key not in LEGAL_PRECEDENTS_DB:
+        country_key = "USA"
+    
+    country_precedents = LEGAL_PRECEDENTS_DB.get(country_key, LEGAL_PRECEDENTS_DB["USA"])
+    
+    # Always include phonetic similarity cases for the selected country
+    precedents.extend(country_precedents.get("phonetic_similarity", []))
     
     # Add category-specific cases
     category_lower = category.lower()
-    if "fashion" in category_lower or "apparel" in category_lower or "clothing" in category_lower:
-        precedents.extend(LEGAL_PRECEDENTS_DB.get("fashion", []))
+    if "fashion" in category_lower or "apparel" in category_lower or "clothing" in category_lower or "streetwear" in category_lower:
+        precedents.extend(country_precedents.get("fashion", []))
     
-    # Add general cases
-    precedents.extend(LEGAL_PRECEDENTS_DB.get("general", []))
+    # Add general cases for the country
+    precedents.extend(country_precedents.get("general", []))
     
     return precedents[:5]  # Limit to top 5
 
