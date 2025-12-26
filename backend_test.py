@@ -1043,6 +1043,37 @@ class BrandEvaluationTester:
             self.log_test("Emergent LLM Key - Exception", False, str(e))
             return False
 
+    def run_currency_tests_only(self):
+        """Run only the currency logic tests as requested"""
+        print("💰 Starting Currency Logic Tests...")
+        print(f"Testing against: {self.base_url}")
+        
+        # Test API health first
+        if not self.test_api_health():
+            print("❌ API health check failed, stopping tests")
+            return False
+        
+        # PRIORITY: Test currency logic as per review request
+        print("\n💰 CURRENCY LOGIC TESTS:")
+        print("Testing currency feature in cost estimates...")
+        
+        # Test Case 1: Single Country USA
+        self.test_currency_single_country_usa()
+        
+        # Test Case 2: Single Country India  
+        self.test_currency_single_country_india()
+        
+        # Test Case 3: Multiple Countries
+        self.test_currency_multiple_countries()
+        
+        # Print summary
+        print(f"\n📊 Currency Test Summary:")
+        print(f"Tests Run: {self.tests_run}")
+        print(f"Tests Passed: {self.tests_passed}")
+        print(f"Success Rate: {(self.tests_passed/self.tests_run)*100:.1f}%")
+        
+        return self.tests_passed == self.tests_run
+
     def run_all_tests(self):
         """Run all backend tests"""
         print("🚀 Starting Backend API Tests...")
@@ -1053,6 +1084,12 @@ class BrandEvaluationTester:
         if not self.test_api_health():
             print("❌ API health check failed, stopping tests")
             return False
+        
+        # PRIORITY: Test currency logic as per review request
+        print("\n💰 PRIORITY: Testing Currency Logic...")
+        self.test_currency_single_country_usa()
+        self.test_currency_single_country_india()
+        self.test_currency_multiple_countries()
         
         # PRIORITY: Test newly configured Emergent LLM key (as per review request)
         print("\n🔑 PRIORITY TEST: Testing newly configured Emergent LLM key...")
