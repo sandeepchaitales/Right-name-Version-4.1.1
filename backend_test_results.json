@@ -1,64 +1,76 @@
 {
   "summary": {
-    "tests_run": 9,
-    "tests_passed": 9,
-    "success_rate": 100.0
+    "tests_run": 11,
+    "tests_passed": 10,
+    "success_rate": 90.9090909090909
   },
   "results": [
     {
       "test": "API Health Check",
       "success": true,
       "details": "Status: 200, Response: {\"message\":\"RightName API is running\"}",
-      "timestamp": "2025-12-25T14:53:42.949642"
+      "timestamp": "2025-12-26T11:42:13.674987"
     },
     {
       "test": "Evaluate Endpoint - Structure",
       "success": true,
-      "details": "All required fields present, Astra NameScore: 72.0",
-      "timestamp": "2025-12-25T14:54:45.437191"
+      "details": "All required fields present, Astra NameScore: 85.5",
+      "timestamp": "2025-12-26T11:43:41.973750"
+    },
+    {
+      "test": "Trademark Research - Luminara HTTP",
+      "success": false,
+      "details": "HTTP 520: {\"detail\":\"Analysis failed: 2 validation errors for BrandEvaluationResponse\\nbrand_scores.0.trademark_research.trademark_conflicts.0.class_number\\n  Input should be a valid string [type=string_type, input_value=1, input_type=int]\\n    For further information visit https://errors.pydantic.dev/2.12/v/",
+      "timestamp": "2025-12-26T11:45:48.565856"
+    },
+    {
+      "test": "Trademark Research - Nexofy Complete",
+      "success": true,
+      "details": "Low risk brand passed. Risk: 1/10, Success: 90%, TM conflicts: 0, Company conflicts: 0",
+      "timestamp": "2025-12-26T11:46:59.996542"
     },
     {
       "test": "Auth Register",
       "success": true,
-      "details": "User registered: user_0d86e1f122a8",
-      "timestamp": "2025-12-25T14:54:45.821648"
+      "details": "User registered: user_9da64e7bc15d",
+      "timestamp": "2025-12-26T11:47:00.390427"
     },
     {
       "test": "Auth Login Email",
       "success": true,
-      "details": "User logged in: user_0d86e1f122a8",
-      "timestamp": "2025-12-25T14:54:46.111745"
+      "details": "User logged in: user_9da64e7bc15d",
+      "timestamp": "2025-12-26T11:47:00.654769"
     },
     {
       "test": "Auth Me",
       "success": true,
-      "details": "Current user: test_62e4fe49@example.com",
-      "timestamp": "2025-12-25T14:54:46.171833"
+      "details": "Current user: test_07cda9ed@example.com",
+      "timestamp": "2025-12-26T11:47:00.696419"
     },
     {
       "test": "Generate Report with Auth",
       "success": true,
-      "details": "Report generated: report_f2521e3259e34e59",
-      "timestamp": "2025-12-25T14:55:15.096081"
+      "details": "Report generated: report_68988fe8a0f54fb8",
+      "timestamp": "2025-12-26T11:48:05.258822"
     },
     {
       "test": "Get Report Authenticated",
       "success": true,
       "details": "Full report retrieved for authenticated user",
-      "timestamp": "2025-12-25T14:55:15.158402"
+      "timestamp": "2025-12-26T11:48:06.348463"
     },
     {
       "test": "Get Report Unauthenticated",
       "success": true,
       "details": "Report retrieved with is_authenticated=False",
-      "timestamp": "2025-12-25T14:55:15.198672"
+      "timestamp": "2025-12-26T11:48:06.383846"
     },
     {
       "test": "Auth Logout",
       "success": true,
       "details": "Logout successful: Logged out successfully",
-      "timestamp": "2025-12-25T14:55:15.237908"
+      "timestamp": "2025-12-26T11:48:06.424862"
     }
   ],
-  "timestamp": "2025-12-25T14:55:15.238052"
+  "timestamp": "2025-12-26T11:48:06.425780"
 }
