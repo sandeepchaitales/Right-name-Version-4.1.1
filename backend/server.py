@@ -914,14 +914,14 @@ async def evaluate_brands(request: BrandEvaluationRequest):
             try:
                 user_message = UserMessage(text=user_prompt)
                 response = await llm_chat.send_message(user_message)
-            
-            content = ""
-            if hasattr(response, 'text'):
-                content = response.text
-            elif isinstance(response, str):
-                content = response
-            else:
-                content = str(response)
+                
+                content = ""
+                if hasattr(response, 'text'):
+                    content = response.text
+                elif isinstance(response, str):
+                    content = response
+                else:
+                    content = str(response)
             
             # Extract JSON from markdown code blocks
             if "```json" in content:
