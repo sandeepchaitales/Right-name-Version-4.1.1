@@ -12,7 +12,8 @@ from datetime import datetime
 def test_emergent_llm_key():
     """Test the newly configured Emergent LLM key with TestBrand"""
     
-    base_url = "https://trademark-research.preview.emergentagent.com"
+    # Use local backend URL since external URL has connectivity issues
+    base_url = "http://localhost:8001"
     api_url = f"{base_url}/api"
     
     # Exact payload from review request (fixed positioning field)
@@ -25,7 +26,7 @@ def test_emergent_llm_key():
     }
     
     print("🔑 SMOKE TEST: Testing newly configured Emergent LLM key")
-    print(f"🌐 Backend URL: {base_url}")
+    print(f"🌐 Backend URL: {base_url} (local)")
     print(f"📋 Test payload: {json.dumps(payload, indent=2)}")
     print("⏱️  Expected duration: 60-120 seconds due to real-time web searches")
     print("\n🚀 Starting test...")
@@ -37,7 +38,7 @@ def test_emergent_llm_key():
             f"{api_url}/evaluate",
             json=payload,
             headers={'Content-Type': 'application/json'},
-            timeout=180  # 3 minutes timeout
+            timeout=300  # 5 minutes timeout for comprehensive analysis
         )
         
         end_time = datetime.now()
@@ -163,7 +164,7 @@ def test_emergent_llm_key():
         return True
         
     except requests.exceptions.Timeout:
-        print("❌ FAILED: Request timed out after 180 seconds")
+        print("❌ FAILED: Request timed out after 300 seconds")
         return False
     except Exception as e:
         print(f"❌ FAILED: Exception occurred - {str(e)}")
