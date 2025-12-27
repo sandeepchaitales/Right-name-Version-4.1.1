@@ -19,59 +19,6 @@ import {
 // RIGHTNAME Logo URL
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_38043537-e3af-491b-9b60-3b8b2372877a/artifacts/9yz5wf80_rightname.ai%20logo%20%281%29.png";
 
-// ============ COUNTRY FLAG MAPPING ============
-const COUNTRY_FLAGS = {
-    'USA': '🇺🇸', 'United States': '🇺🇸',
-    'India': '🇮🇳',
-    'UK': '🇬🇧', 'United Kingdom': '🇬🇧',
-    'Japan': '🇯🇵',
-    'Germany': '🇩🇪',
-    'France': '🇫🇷',
-    'Canada': '🇨🇦',
-    'Australia': '🇦🇺',
-    'China': '🇨🇳',
-    'Singapore': '🇸🇬',
-    'UAE': '🇦🇪', 'United Arab Emirates': '🇦🇪',
-    'Brazil': '🇧🇷',
-    'Mexico': '🇲🇽',
-    'Italy': '🇮🇹',
-    'Spain': '🇪🇸',
-    'South Korea': '🇰🇷',
-    'Netherlands': '🇳🇱',
-    'Switzerland': '🇨🇭',
-    'Sweden': '🇸🇪',
-    'Norway': '🇳🇴',
-    'Denmark': '🇩🇰',
-    'Finland': '🇫🇮',
-    'Belgium': '🇧🇪',
-    'Austria': '🇦🇹',
-    'Ireland': '🇮🇪',
-    'Portugal': '🇵🇹',
-    'Poland': '🇵🇱',
-    'Russia': '🇷🇺',
-    'Turkey': '🇹🇷',
-    'Saudi Arabia': '🇸🇦',
-    'South Africa': '🇿🇦',
-    'New Zealand': '🇳🇿',
-    'Thailand': '🇹🇭',
-    'Malaysia': '🇲🇾',
-    'Indonesia': '🇮🇩',
-    'Philippines': '🇵🇭',
-    'Vietnam': '🇻🇳',
-    'Taiwan': '🇹🇼',
-    'Hong Kong': '🇭🇰',
-    'Israel': '🇮🇱',
-    'Egypt': '🇪🇬',
-    'Nigeria': '🇳🇬',
-    'Kenya': '🇰🇪',
-    'Argentina': '🇦🇷',
-    'Chile': '🇨🇱',
-    'Colombia': '🇨🇴',
-    'Peru': '🇵🇪',
-    'Global': '🌍',
-    'EU': '🇪🇺', 'Europe': '🇪🇺'
-};
-
 // Get country name (handles both string and object formats)
 const getCountryName = (country) => {
     return typeof country === 'object' ? country?.name : country;
